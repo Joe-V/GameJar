@@ -23,11 +23,11 @@ public class MainSandbox {
         
         RenderWindow window = new RenderWindow("GameJar - Test RenderWindow", new DisplayMode(1366, 768, 32, 60), false);
         
-        Image img = ImageIO.read(new File("assets\\MortimersShell.png"));
-        Image img2 = ImageIO.read(new File("assets\\viridan.jpg"));
+        Image img = ImageIO.read(new File("assets\\test-image-A.png"));
+        Image img2 = ImageIO.read(new File("assets\\test-image-B.gif"));
         GameWorld world = new GameWorld(60, window); world.setDebugMode(true);
-        world.addEntity(new Entity(200, 20, img2, 30));
-        world.addEntity(new Entity(30, 0, img, 45) {
+        world.addEntity(new Entity(200, 20, img, 30));
+        world.addEntity(new Entity(30, 0, img2, 45) {
             @Override
             public void update(double dt) {
                 this.getTransform().translate(50 * dt, 0.4 * dt);
