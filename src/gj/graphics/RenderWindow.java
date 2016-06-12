@@ -4,6 +4,8 @@ import java.awt.DisplayMode;
 import java.awt.Graphics;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseListener;
 import javax.swing.JFrame;
 
 /**
@@ -101,9 +103,28 @@ public class RenderWindow {
      * setting.
      */
     private void reloadFrame() {
-        if (frame != null) frame.dispose(); // If the frame is already active and visible, dispose of it because we're about to replace it.
+        KeyListener[] keyListeners;
+        MouseListener[] mouseListeners;
         
+        if (frame != null) { // If the frame is already active...
+            // Get its existing key and mouse event listeners.
+            keyListeners = frame.getListeners(KeyListener.class);
+            mouseListeners = frame.getListeners(MouseListener.class);
+            
+            // Dispose of the old frame as we are about to replace it.
+            frame.dispose();
+        } else {
+            keyListeners = new KeyListener[0];
+            mouseListeners = new MouseListener[0];
+        }
+        
+        //Create the new frame.
         this.frame = new JFrame(title);
+        
+        // Reregister the listeners for the old frame with the new one.
+        for (KeyListener kL : keyListeners) frame.addKeyListener(kL);
+        for (MouseListener mL : mouseListeners) frame.addMouseListener(mL);
+        
         frame.setName(title);
         frame.setIgnoreRepaint(true); // Ignore OS calls to repaint() since we are handling all repaint calls natively.
         
@@ -189,11 +210,11 @@ public class RenderWindow {
         frame.repaint();
     }
     
-    // Temporary. All key listeners are lost whenever the frame is reloaded,
-    // so the final solution should be to have this class keep its own list of
-    // EventListeners, act as a listener for the currently active JFrame itself
-    // and then pass on any events that take place.
-    public void addKeyListener(java.awt.event.KeyListener l) {
+    public void addKeyListener(KeyListener l) {
         frame.addKeyListener(l);
+    }
+    
+    public void addMouseListener(MouseListener l) {
+        frame.addMouseListener(l);
     }
 }
